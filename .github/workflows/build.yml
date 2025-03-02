@@ -24,6 +24,17 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: ${{ matrix.java }}
+    - name: Install Opera
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        wget -O - http://deb.opera.com/archive.key | sudo apt-key add -
+        sudo sh -c 'echo "deb http://deb.opera.com/opera-stable/ stable non-free" >> /etc/apt/sources.list.d/opera.list'
+        sudo apt-get update
+        sudo apt-get install opera
+    - name: Start Xvfb
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        Xvfb $DISPLAY &
     - name: Run tests
       run: |
         mvn -B test
